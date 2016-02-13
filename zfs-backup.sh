@@ -119,8 +119,8 @@ if [ $return -eq 0 -o $return -eq 24 ]; then
      year="${snap:0:4}"
 
      # Convert this snap to epoc time
-     snapEpoc=`date_calc $year $mon $day $hour $min $sec +%s"`
-     week=`date_calc $year $mon $day $hour $min $sec ""+%G%V"`
+     snapEpoc=`date_calc $year $mon $day $hour $min $sec "+%s"`
+     week=`date_calc $year $mon $day $hour $min $sec "+%G%V"`
 
 
    # If we are replicating, don't prune anything which hasn't gone out yet
