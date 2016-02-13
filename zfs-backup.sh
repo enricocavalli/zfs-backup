@@ -72,7 +72,7 @@ if [ $return -eq 0 -o $return -eq 24 ]; then
   mon="${lastSEND:5:2}"
   year="${lastSEND:0:4}"
 
-  sendEpoc=`date -j -f "%Y %m %d %H %M %S" "$year $mon $day $hour $min $sec" "+%s"`
+  sendEpoc=`date -j -f "%Y %m %d %H %M %S" "$year $mon $day $hour $min $sec" "+%s"` # TODO: support for GNU date
   fi
   curEpoc=`date +%s`
   lastYear=""; lastMon=""; lastDay=""; lastHour="" lastMin="" ; lastSec=""
@@ -97,8 +97,8 @@ if [ $return -eq 0 -o $return -eq 24 ]; then
      year="${snap:0:4}"
 
      # Convert this snap to epoc time
-     snapEpoc=`date -j -f "%Y %m %d %H %M %S" "$year $mon $day $hour $min $sec" "+%s"`
-     week=`date -j -f "%Y %m %d %H %M %S" "$year $mon $day $hour $min $sec" "+%G%V"`
+     snapEpoc=`date -j -f "%Y %m %d %H %M %S" "$year $mon $day $hour $min $sec" "+%s"` # TODO: support for GNU date
+     week=`date -j -f "%Y %m %d %H %M %S" "$year $mon $day $hour $min $sec" "+%G%V"` # TODO: support for GNU date
 
 
    # If we are replicating, don't prune anything which hasn't gone out yet
