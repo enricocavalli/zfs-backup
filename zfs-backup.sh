@@ -3,6 +3,28 @@
 INSTALLDIR=$( (cd -P $(dirname $0) && pwd) )
 . "$INSTALLDIR/config"
 
+function date_calc {
+
+year=$1
+month=$2
+day=$3
+hour=$4
+min=$5
+sec=$6
+
+format=$7
+
+if uname -a | grep -q Darwin; then
+  # OS X date
+  date -j -f "%Y %m %d %H %M %S" "$year $month $day $hour $min $sec" "$format"
+else
+  # GNU date
+  date -d "$year-$month-$day $hour:$min:$sec" "$format"
+fi
+
+}
+
+
 mkdir -p "$INSTALLDIR/logs"
 
 if ! $SSH root@$REMOTEHOST "[ -d /$RPOOL/.rsync ]"
@@ -72,7 +94,7 @@ if [ $return -eq 0 -o $return -eq 24 ]; then
   mon="${lastSEND:5:2}"
   year="${lastSEND:0:4}"
 
-  sendEpoc=`date -j -f "%Y %m %d %H %M %S" "$year $mon $day $hour $min $sec" "+%s"` # TODO: support for GNU date
+  sendEpoc=`date_calc $year $mon $day $hour $min $sec "+%s"`
   fi
   curEpoc=`date +%s`
   lastYear=""; lastMon=""; lastDay=""; lastHour="" lastMin="" ; lastSec=""
@@ -97,8 +119,8 @@ if [ $return -eq 0 -o $return -eq 24 ]; then
      year="${snap:0:4}"
 
      # Convert this snap to epoc time
-     snapEpoc=`date -j -f "%Y %m %d %H %M %S" "$year $mon $day $hour $min $sec" "+%s"` # TODO: support for GNU date
-     week=`date -j -f "%Y %m %d %H %M %S" "$year $mon $day $hour $min $sec" "+%G%V"` # TODO: support for GNU date
+     snapEpoc=`date_calc $year $mon $day $hour $min $sec +%s"`
+     week=`date_calc $year $mon $day $hour $min $sec ""+%G%V"`
 
 
    # If we are replicating, don't prune anything which hasn't gone out yet
