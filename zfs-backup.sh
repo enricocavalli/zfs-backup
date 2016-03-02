@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 INSTALLDIR=$( (cd -P $(dirname $0) && pwd) )
 . "$INSTALLDIR/config"
