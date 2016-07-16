@@ -30,7 +30,6 @@ to back up.
 Custom exclusion can be set in exclusions.txt (these are in addition to
 default-exclusions.txt)
 
-
 # Encrypted filesystem
 
 Support for cryptsetyp encrypted devices is included (linux, LUKS encryption).
