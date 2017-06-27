@@ -30,14 +30,10 @@ to back up.
 Custom exclusion can be set in exclusions.txt (these are in addition to
 default-exclusions.txt)
 
-# Encrypted filesystem
+# Delegate zfs permission
 
-Support for cryptsetyp encrypted devices is included (linux, LUKS encryption).
-Specify raw devices in the configuration file for the remote host and the remote replica host
+I use this settins on my `user`:
 
-    DEVICES_REMOTEHOST="/dev/dm-x /dev/dm-y"
-    DEVICES_REPLICAHOST="/dev/dm-z"
-
-The `util.sh` script will take care of opening the luks-encrypted devices and importing the
-zfs pool.
+	zfs allow user clone,create,destroy,mount,snapshot fs
+	sysctl vfs.usermount=1 # necessary on FreeBSD
 

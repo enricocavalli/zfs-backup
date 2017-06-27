@@ -1,11 +1,7 @@
-REMOTEHOST="your-host.domain.it"
-RPOOL="pool-name/fs-name"
-KEYFILEPATH="/path/to/ssh/private_key/.ssh/id_dsa"
+REMOTEHOST="freenas.local"
+REMOTE_USER="root"
+KEYFILEPATH="$HOME/.ssh/id_rsa"
 EXTRA_RSYNC_OPTIONS=""
-
-DEVICES_REMOTEHOST="/dev/dm-x /dev/dm-y"
-
-REPLICA_HOST=""
-REPLICA_POOL=""
-
-DEVICES_REPLICAHOST="/dev/dm-z"
+#EXTRA_RSYNC_OPTIONS="-M--fake-super"
+# non chiaro se funziona bene con zfs
+RPOOL=data
