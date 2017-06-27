@@ -100,7 +100,7 @@ if [ $return -eq 0 -o $return -eq 24 ]; then
   curEpoc=`date +%s`
   lastYear=""; lastMon=""; lastDay=""; lastHour="" lastMin="" ; lastSec=""
   # Get our list of snaps
-  snaps=$(ssh root@$REMOTEHOST "zfs list -d 1 -t snapshot -H $RPOOL/.rsync" | cut -f 1 | cut -d '@' -f 2)
+  snaps=$(ssh $REMOTE_USER@$REMOTEHOST "zfs list -d 1 -t snapshot -H $RPOOL" | cut -f 1 | cut -d '@' -f 2 | grep -v ^auto-)
 
   # Reverse the list, sort from newest to oldest
   for tmp in $snaps
