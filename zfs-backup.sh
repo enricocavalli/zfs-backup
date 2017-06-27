@@ -26,8 +26,9 @@ fi
 
 
 mkdir -p "$INSTALLDIR/logs"
+MOUNT_POINT="/mnt/$RPOOL"
 
-if ! ssh root@$REMOTEHOST "[ -d /$RPOOL/.rsync ]"
+if ! ssh $REMOTE_USER@$REMOTEHOST "[ -d $MOUNT_POINT ]"
   then
   echo "Remote filesystem not mounted"
   exit 1
@@ -35,22 +36,21 @@ fi
 
 SOURCES="/"
 if [ -f "sources.txt" ]; then
-  SOURCES="--files-from=$INSTALLDIR/sources.txt -r /"
+  SOURCES="--files-from=\"$INSTALLDIR/sources.txt\" -r /"
 fi
+
+EXCLUSIONS="--exclude-from=\"$INSTALLDIR/default-exclusions.txt\""
+[ -f "./exclusions.txt" ] && EXCLUSIONS="${EXCLUSIONS} --exclude-from=\"$INSTALLDIR/exclusions.txt\""
 
 echo "Checking sudo execution"
 sudo true || exit 1
 
-CUSTOM_EXCLUSIONS=""
-[ -f "./exclusions.txt" ] && CUSTOM_EXCLUSIONS="--exclude-from=$INSTALLDIR/exclusions.txt"
-
 now="$(date +%Y-%m-%d-%H%M%S)"
 
-echo "Please enter you password for 'sudo' if requested."
 echo "##### BEGIN RSYNC"
-sudo nice -n 20 rsync \
--e "ssh -i $KEYFILEPATH" \
---log-file="$INSTALLDIR/logs/sync.log" \
+eval sudo nice -n 20 rsync \
+-e \"'ssh -i $KEYFILEPATH'\" \
+--log-file=\"$INSTALLDIR/logs/sync.log\" \
 --fuzzy \
 --delete \
 --delete-excluded \
@@ -72,16 +72,17 @@ sudo nice -n 20 rsync \
 --itemize-changes \
 --one-file-system \
 $EXTRA_RSYNC_OPTIONS \
---exclude-from="$INSTALLDIR/default-exclusions.txt" "$CUSTOM_EXCLUSIONS" \
-$SOURCES root@$REMOTEHOST:/$RPOOL/.rsync/
+$EXCLUSIONS \
+$SOURCES $REMOTE_USER@$REMOTEHOST:$MOUNT_POINT/
 
 return=$?
 echo "##### END RSYNC"
 
 if [ $return -eq 0 -o $return -eq 24 ]; then
-  echo "##### BEGIN AUTOPRUNE"
-  ssh root@$REMOTEHOST "zfs snapshot -r $RPOOL/.rsync@$now && zfs clone $RPOOL/.rsync@$now $RPOOL/$now"
+  echo "##### begin snapshot"
+  ssh $REMOTE_USER@$REMOTEHOST "zfs snapshot -r $RPOOL@$now && zfs clone $RPOOL@$now ${RPOOL}_$now"
 
+  echo "##### BEGIN AUTOPRUNE"
 
   # determine the last synced snapshot
   lastSEND=$(ssh root@$REMOTEHOST "zfs get -d 1 -H -t snapshot zfs-backup:synced $RPOOL/.rsync" | awk '($3 ~ "true") {print $0}' | tail -1 | cut -f 1 | cut -d '@' -f 2)
@@ -138,7 +139,7 @@ if [ $return -eq 0 -o $return -eq 24 ]; then
      # Looking for snaps older than 12 months
      #if [ $check -gt 31536000 ]; then
      #   echo "Destroy $snap"
-     #   ssh root@$REMOTEHOST "zfs destroy -r  data@$snap"
+     #   ssh $REMOTE_USER@$REMOTEHOST "zfs destroy -r  data@$snap"
      #   pruned=1
      #fi
 
@@ -147,7 +148,7 @@ if [ $return -eq 0 -o $return -eq 24 ]; then
         # Did we already have a snapshot from this week?
         if [ "$week" = "$lastWeek" ] ; then
           echo "Destroy $snap"
-          ssh root@$REMOTEHOST "zfs destroy -r -R $RPOOL/.rsync@$snap"
+          ssh $REMOTE_USER@$REMOTEHOST "zfs destroy -r -R $RPOOL@$snap"
           pruned=1
         fi
      fi
@@ -156,7 +157,7 @@ if [ $return -eq 0 -o $return -eq 24 ]; then
      if [ $check -gt 86400 -a $pruned -eq 0 ]; then
         if [ "$week" = "$lastWeek" -a "$day" = "$lastDay" ] ; then
           echo "Destroy $snap"
-          ssh root@$REMOTEHOST "zfs destroy -r -R $RPOOL/.rsync@$snap"
+          ssh $REMOTE_USER@$REMOTEHOST "zfs destroy -r -R $RPOOL@$snap"
           pruned=1
         fi
      fi
@@ -165,7 +166,7 @@ if [ $return -eq 0 -o $return -eq 24 ]; then
      if [ $check -gt 3600 -a $pruned -eq 0 ]; then
         if [ "$week" = "$lastWeek" -a "$day" = "$lastDay" -a "$hour" = "$lastHour" ] ; then
           echo "Destroy $snap"
-          ssh root@$REMOTEHOST "zfs destroy -r -R $RPOOL/.rsync@$snap"
+          ssh $REMOTE_USER@$REMOTEHOST "zfs destroy -r -R $RPOOL@$snap"
           pruned=1
         fi
      fi
