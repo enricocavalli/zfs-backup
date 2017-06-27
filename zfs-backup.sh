@@ -85,7 +85,7 @@ if [ $return -eq 0 -o $return -eq 24 ]; then
   echo "##### BEGIN AUTOPRUNE"
 
   # determine the last synced snapshot
-  lastSEND=$(ssh root@$REMOTEHOST "zfs get -d 1 -H -t snapshot zfs-backup:synced $RPOOL/.rsync" | awk '($3 ~ "true") {print $0}' | tail -1 | cut -f 1 | cut -d '@' -f 2)
+  lastSEND=$(ssh $REMOTE_USER@$REMOTEHOST "zfs get -d 1 -H -t snapshot zfs-backup:synced $RPOOL" | awk '($3 ~ "true") {print $0}' | tail -1 | cut -f 1 | cut -d '@' -f 2 | grep -v ^auto-)
 
   if [ -n "$lastSEND" ] ; then
   sec="${lastSEND:15:2}"
@@ -177,16 +177,5 @@ if [ $return -eq 0 -o $return -eq 24 ]; then
 
   done
   echo "##### END AUTOPRUNE"
-
-  if [ -n "$REPLICA_HOST" ]; then
-    if ! ssh root@$REPLICA_HOST "[ -d /$REPLICA_POOL/.rsync ]"
-    then
-      echo "Replica filesystem not mounted"
-      exit 1
-    fi
-    echo "##### BEGIN REPLICA"
-    $INSTALLDIR/replica.sh
-    echo "##### END REPLICA"
-  fi
 
 fi
