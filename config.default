@@ -1,4 +1,3 @@
-SSH="ssh -4"
 REMOTEHOST="your-host.domain.it"
 RPOOL="pool-name/fs-name"
 KEYFILEPATH="/path/to/ssh/private_key/.ssh/id_dsa"

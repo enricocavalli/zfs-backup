@@ -27,7 +27,7 @@ fi
 
 mkdir -p "$INSTALLDIR/logs"
 
-if ! $SSH root@$REMOTEHOST "[ -d /$RPOOL/.rsync ]"
+if ! ssh root@$REMOTEHOST "[ -d /$RPOOL/.rsync ]"
   then
   echo "Remote filesystem not mounted"
   exit 1
@@ -49,7 +49,7 @@ now="$(date +%Y-%m-%d-%H%M%S)"
 echo "Please enter you password for 'sudo' if requested."
 echo "##### BEGIN RSYNC"
 sudo nice -n 20 rsync \
--e "$SSH -i $KEYFILEPATH" \
+-e "ssh -i $KEYFILEPATH" \
 --log-file="$INSTALLDIR/logs/sync.log" \
 --fuzzy \
 --delete \
@@ -80,11 +80,11 @@ echo "##### END RSYNC"
 
 if [ $return -eq 0 -o $return -eq 24 ]; then
   echo "##### BEGIN AUTOPRUNE"
-  $SSH root@$REMOTEHOST "zfs snapshot -r $RPOOL/.rsync@$now && zfs clone $RPOOL/.rsync@$now $RPOOL/$now"
+  ssh root@$REMOTEHOST "zfs snapshot -r $RPOOL/.rsync@$now && zfs clone $RPOOL/.rsync@$now $RPOOL/$now"
 
 
   # determine the last synced snapshot
-  lastSEND=$($SSH root@$REMOTEHOST "zfs get -d 1 -H -t snapshot zfs-backup:synced $RPOOL/.rsync" | awk '($3 ~ "true") {print $0}' | tail -1 | cut -f 1 | cut -d '@' -f 2)
+  lastSEND=$(ssh root@$REMOTEHOST "zfs get -d 1 -H -t snapshot zfs-backup:synced $RPOOL/.rsync" | awk '($3 ~ "true") {print $0}' | tail -1 | cut -f 1 | cut -d '@' -f 2)
 
   if [ -n "$lastSEND" ] ; then
   sec="${lastSEND:15:2}"
@@ -99,7 +99,7 @@ if [ $return -eq 0 -o $return -eq 24 ]; then
   curEpoc=`date +%s`
   lastYear=""; lastMon=""; lastDay=""; lastHour="" lastMin="" ; lastSec=""
   # Get our list of snaps
-  snaps=$($SSH root@$REMOTEHOST "zfs list -d 1 -t snapshot -H $RPOOL/.rsync" | cut -f 1 | cut -d '@' -f 2)
+  snaps=$(ssh root@$REMOTEHOST "zfs list -d 1 -t snapshot -H $RPOOL/.rsync" | cut -f 1 | cut -d '@' -f 2)
 
   # Reverse the list, sort from newest to oldest
   for tmp in $snaps
@@ -138,7 +138,7 @@ if [ $return -eq 0 -o $return -eq 24 ]; then
      # Looking for snaps older than 12 months
      #if [ $check -gt 31536000 ]; then
      #   echo "Destroy $snap"
-     #   $SSH root@$REMOTEHOST "zfs destroy -r  data@$snap"
+     #   ssh root@$REMOTEHOST "zfs destroy -r  data@$snap"
      #   pruned=1
      #fi
 
@@ -147,7 +147,7 @@ if [ $return -eq 0 -o $return -eq 24 ]; then
         # Did we already have a snapshot from this week?
         if [ "$week" = "$lastWeek" ] ; then
           echo "Destroy $snap"
-          $SSH root@$REMOTEHOST "zfs destroy -r -R $RPOOL/.rsync@$snap"
+          ssh root@$REMOTEHOST "zfs destroy -r -R $RPOOL/.rsync@$snap"
           pruned=1
         fi
      fi
@@ -156,7 +156,7 @@ if [ $return -eq 0 -o $return -eq 24 ]; then
      if [ $check -gt 86400 -a $pruned -eq 0 ]; then
         if [ "$week" = "$lastWeek" -a "$day" = "$lastDay" ] ; then
           echo "Destroy $snap"
-          $SSH root@$REMOTEHOST "zfs destroy -r -R $RPOOL/.rsync@$snap"
+          ssh root@$REMOTEHOST "zfs destroy -r -R $RPOOL/.rsync@$snap"
           pruned=1
         fi
      fi
@@ -165,7 +165,7 @@ if [ $return -eq 0 -o $return -eq 24 ]; then
      if [ $check -gt 3600 -a $pruned -eq 0 ]; then
         if [ "$week" = "$lastWeek" -a "$day" = "$lastDay" -a "$hour" = "$lastHour" ] ; then
           echo "Destroy $snap"
-          $SSH root@$REMOTEHOST "zfs destroy -r -R $RPOOL/.rsync@$snap"
+          ssh root@$REMOTEHOST "zfs destroy -r -R $RPOOL/.rsync@$snap"
           pruned=1
         fi
      fi
@@ -178,7 +178,7 @@ if [ $return -eq 0 -o $return -eq 24 ]; then
   echo "##### END AUTOPRUNE"
 
   if [ -n "$REPLICA_HOST" ]; then
-    if ! $SSH root@$REPLICA_HOST "[ -d /$REPLICA_POOL/.rsync ]"
+    if ! ssh root@$REPLICA_HOST "[ -d /$REPLICA_POOL/.rsync ]"
     then
       echo "Replica filesystem not mounted"
       exit 1
