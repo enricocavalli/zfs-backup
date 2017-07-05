@@ -80,7 +80,7 @@ echo "##### END RSYNC"
 
 if [ $return -eq 0 -o $return -eq 24 ]; then
   echo "##### begin snapshot"
-  ssh $REMOTE_USER@$REMOTEHOST "zfs snapshot -r $RPOOL@$now && zfs clone $RPOOL@$now ${RPOOL}_$now"
+  ssh $REMOTE_USER@$REMOTEHOST "zfs snapshot -r $RPOOL@$now"
 
   echo "##### BEGIN AUTOPRUNE"
 
