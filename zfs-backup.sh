@@ -88,15 +88,16 @@ if [ $return -eq 0 -o $return -eq 24 ]; then
   lastSEND=$(ssh $REMOTE_USER@$REMOTEHOST "zfs get -d 1 -H -t snapshot zfs-backup:synced $RPOOL" | awk '($3 ~ "true") {print $0}' | tail -1 | cut -f 1 | cut -d '@' -f 2 | grep -v ^auto-)
 
   if [ -n "$lastSEND" ] ; then
-  sec="${lastSEND:15:2}"
-  min="${lastSEND:13:2}"
-  hour="${lastSEND:11:2}"
-  day="${lastSEND:8:2}"
-  mon="${lastSEND:5:2}"
-  year="${lastSEND:0:4}"
+    sec="${lastSEND:15:2}"
+    min="${lastSEND:13:2}"
+    hour="${lastSEND:11:2}"
+    day="${lastSEND:8:2}"
+    mon="${lastSEND:5:2}"
+    year="${lastSEND:0:4}"
 
-  sendEpoc=`date_calc $year $mon $day $hour $min $sec "+%s"`
+    sendEpoc=`date_calc $year $mon $day $hour $min $sec "+%s"`
   fi
+
   curEpoc=`date +%s`
   lastYear=""; lastMon=""; lastDay=""; lastHour="" lastMin="" ; lastSec=""
   # Get our list of snaps
