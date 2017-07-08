@@ -21,3 +21,4 @@ Library/Caches/*
 private/var/db/com.apple.backupd.backupVerification/
 .DS_Store
 dyld_shared_cache_*
+Containers/com.bitdefender.BitdefenderVirusScanner/
