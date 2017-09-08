@@ -95,7 +95,8 @@ if [ $return -eq 0 -o $return -eq 24 ]; then
   # Reverse the list, sort from newest to oldest
   for tmp in $snaps
   do
-     rSnaps="$tmp $rSnaps"
+     # rSnaps="$tmp $rSnaps" # reverse order
+     rSnaps="$rSnaps $tmp"   # chronological order
   done
 
   num=0
