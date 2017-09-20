@@ -84,9 +84,6 @@ if [ $return -eq 0 -o $return -eq 24 ]; then
 
   echo "##### BEGIN AUTOPRUNE"
 
-  # determine the last synced snapshot
-  lastSEND=$(ssh $REMOTE_USER@$REMOTEHOST "zfs get -d 1 -H -t snapshot zfs-backup:synced $RPOOL" | awk '($3 ~ "true") {print $0}' | tail -1 | cut -f 1 | cut -d '@' -f 2 | grep -v ^auto-)
-
   curEpoc=`date +%s`
   lastYear=""; lastMon=""; lastDay=""; lastHour="" lastMin="" ; lastSec=""
   # Get our list of snaps
