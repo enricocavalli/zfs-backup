@@ -3,6 +3,8 @@
 INSTALLDIR=$( (cd -P $(dirname $0) && pwd) )
 . "$INSTALLDIR/config"
 
+RPOOL=${MOUNT_POINT#/}
+
 function date_calc {
 
 year=$1

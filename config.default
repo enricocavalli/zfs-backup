@@ -4,5 +4,5 @@ KEYFILEPATH="$HOME/.ssh/id_rsa"
 EXTRA_RSYNC_OPTIONS=""
 #EXTRA_RSYNC_OPTIONS="-M--fake-super"
 # non chiaro se funziona bene con zfs
-RPOOL=data
-MOUNT_POINT="/$RPOOL"
+#mount point is assumed to be the full path - data/path is the zfs filesystem
+MOUNT_POINT="/data/path"
