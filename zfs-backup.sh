@@ -26,7 +26,6 @@ fi
 
 
 mkdir -p "$INSTALLDIR/logs"
-MOUNT_POINT="/mnt/$RPOOL"
 
 if ! ssh $REMOTE_USER@$REMOTEHOST "[ -d $MOUNT_POINT ]"
   then

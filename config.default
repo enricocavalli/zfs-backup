@@ -5,3 +5,4 @@ EXTRA_RSYNC_OPTIONS=""
 #EXTRA_RSYNC_OPTIONS="-M--fake-super"
 # non chiaro se funziona bene con zfs
 RPOOL=data
+MOUNT_POINT="/$RPOOL"
