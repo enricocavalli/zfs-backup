@@ -36,12 +36,12 @@ if ! ssh $REMOTE_USER@$REMOTEHOST "[ -d $MOUNT_POINT ]"
 fi
 
 SOURCES="/"
-if [ -f "sources.txt" ]; then
+if [ -f "$INSTALLDIR/sources.txt" ]; then
   SOURCES="--files-from=\"$INSTALLDIR/sources.txt\" -r /"
 fi
 
 EXCLUSIONS="--exclude-from=\"$INSTALLDIR/default-exclusions.txt\""
-[ -f "./exclusions.txt" ] && EXCLUSIONS="${EXCLUSIONS} --exclude-from=\"$INSTALLDIR/exclusions.txt\""
+[ -f "$INSTALLDIR/exclusions.txt" ] && EXCLUSIONS="${EXCLUSIONS} --exclude-from=\"$INSTALLDIR/exclusions.txt\""
 
 echo "Checking sudo execution"
 sudo true || exit 1
