@@ -18,6 +18,7 @@
 /.MobileBackups/
 .dbfseventsd
 Library/Caches/*
+Library/Logs/*
 private/var/db/com.apple.backupd.backupVerification/
 .DS_Store
 dyld_shared_cache_*
