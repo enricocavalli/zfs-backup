@@ -6,3 +6,4 @@ EXTRA_RSYNC_OPTIONS=""
 # non chiaro se funziona bene con zfs
 #mount point is assumed to be the full path - data/path is the zfs filesystem
 MOUNT_POINT="/data/path"
+PRUNE_ONLY_ONE="true"

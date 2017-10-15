@@ -3,6 +3,7 @@
 INSTALLDIR=$( (cd -P $(dirname $0) && pwd) )
 . "$INSTALLDIR/config"
 
+PRUNE_ONLY_ONE=${PRUNE_ONLY_ONE:-}
 RPOOL=${MOUNT_POINT#/}
 
 function date_calc {
@@ -148,6 +149,11 @@ if [ $return -eq 0 -o $return -eq 24 ]; then
           ssh $REMOTE_USER@$REMOTEHOST "zfs destroy -r -R $RPOOL@$snap"
           pruned=1
         fi
+     fi
+
+     # break if pruned=1 conditionally if only one prune per run is desider (let it be a configuration choice)
+     if [ $pruned -eq 1 -a "$PRUNE_ONLY_ONE" = "true" ]; then
+       break
      fi
 
      # Save values of this snapshot for next pass
