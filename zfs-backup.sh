@@ -97,7 +97,7 @@ if [ $return -eq 0 -o $return -eq 24 ]; then
      rSnaps="$tmp $rSnaps" # reverse order
   done
 
-  num=0
+  pruned_num=0
   for snap in $rSnaps
   do
      # date format assumed: YYYY-mm-dd-HHMMSS"
@@ -130,6 +130,7 @@ if [ $return -eq 0 -o $return -eq 24 ]; then
           echo "Destroy $snap"
           ssh $REMOTE_USER@$REMOTEHOST "zfs destroy -r -R $RPOOL@$snap"
           pruned=1
+          pruned_num=`expr $pruned_num +  1`
         fi
      fi
 
@@ -139,6 +140,7 @@ if [ $return -eq 0 -o $return -eq 24 ]; then
           echo "Destroy $snap"
           ssh $REMOTE_USER@$REMOTEHOST "zfs destroy -r -R $RPOOL@$snap"
           pruned=1
+          pruned_num=`expr $pruned_num +  1`
         fi
      fi
 
@@ -148,11 +150,12 @@ if [ $return -eq 0 -o $return -eq 24 ]; then
           echo "Destroy $snap"
           ssh $REMOTE_USER@$REMOTEHOST "zfs destroy -r -R $RPOOL@$snap"
           pruned=1
+          pruned_num=`expr $pruned_num +  1`
         fi
      fi
 
      # break if pruned=1 conditionally if only one prune per run is desider (let it be a configuration choice)
-     if [ $pruned -eq 1 -a "$LIMIT_PRUNE" = "true" ]; then
+     if [ $pruned_num -eq 2 -a "$LIMIT_PRUNE" = "true" ]; then
        break
      fi
 
