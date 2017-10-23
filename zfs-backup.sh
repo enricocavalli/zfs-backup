@@ -3,7 +3,7 @@
 INSTALLDIR=$( (cd -P $(dirname $0) && pwd) )
 . "$INSTALLDIR/config"
 
-PRUNE_ONLY_ONE=${PRUNE_ONLY_ONE:-}
+LIMIT_PRUNE=${LIMIT_PRUNE:-}
 RPOOL=${MOUNT_POINT#/}
 
 function date_calc {
@@ -152,7 +152,7 @@ if [ $return -eq 0 -o $return -eq 24 ]; then
      fi
 
      # break if pruned=1 conditionally if only one prune per run is desider (let it be a configuration choice)
-     if [ $pruned -eq 1 -a "$PRUNE_ONLY_ONE" = "true" ]; then
+     if [ $pruned -eq 1 -a "$LIMIT_PRUNE" = "true" ]; then
        break
      fi
 
