@@ -155,7 +155,7 @@ if [ $return -eq 0 -o $return -eq 24 ]; then
      fi
 
      # break if pruned=1 conditionally if only one prune per run is desider (let it be a configuration choice)
-     if [  $LIMIT_PRUNE -gt 0 -a $pruned_num -gt $LIMIT_PRUNE ]; then
+     if [  $LIMIT_PRUNE -gt 0 -a $pruned_num -ge $LIMIT_PRUNE ]; then
        break
      fi
 
