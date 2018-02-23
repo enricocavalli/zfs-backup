@@ -44,6 +44,9 @@ fi
 EXCLUSIONS="--exclude-from=\"$INSTALLDIR/default-exclusions.txt\""
 [ -f "$INSTALLDIR/exclusions.txt" ] && EXCLUSIONS="${EXCLUSIONS} --exclude-from=\"$INSTALLDIR/exclusions.txt\""
 
+# repeat hourly
+while true
+do
 
 now="$(date +%Y-%m-%d-%H%M%S)"
 
@@ -171,3 +174,6 @@ if [ $return -eq 0 -o $return -eq 24 ]; then
   echo "##### END AUTOPRUNE"
 
 fi
+
+sleep 3600
+done
