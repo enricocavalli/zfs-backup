@@ -7,3 +7,5 @@ EXTRA_RSYNC_OPTIONS=""
 #mount point is assumed to be the full path - data/path is the zfs filesystem
 MOUNT_POINT="/data/path"
 LIMIT_PRUNE="0"
+# see https://healthchecks.io/ for ping urls
+#PING_URL=""

@@ -81,6 +81,12 @@ return=$?
 echo "##### END RSYNC"
 
 if [ $return -eq 0 -o $return -eq 24 ]; then
+
+  if [ ! -z "$PING_URL" ]; then
+    curl -fsS --retry 3 "${PING_URL}"
+  fi
+
+
   echo "##### begin snapshot"
   ssh $REMOTE_USER@$REMOTEHOST "zfs snapshot -r $RPOOL@$now"
 
