@@ -44,13 +44,11 @@ fi
 EXCLUSIONS="--exclude-from=\"$INSTALLDIR/default-exclusions.txt\""
 [ -f "$INSTALLDIR/exclusions.txt" ] && EXCLUSIONS="${EXCLUSIONS} --exclude-from=\"$INSTALLDIR/exclusions.txt\""
 
-echo "Checking sudo execution"
-sudo true || exit 1
 
 now="$(date +%Y-%m-%d-%H%M%S)"
 
 echo "##### BEGIN RSYNC"
-eval sudo nice -n 20 rsync \
+eval nice -n 20 rsync \
 -e \"'ssh -i $KEYFILEPATH'\" \
 --log-file=\"$INSTALLDIR/logs/sync.log\" \
 --fuzzy \
