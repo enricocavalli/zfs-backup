@@ -28,6 +28,10 @@ fi
 }
 
 
+# repeat hourly
+while true
+do
+  
 mkdir -p "$INSTALLDIR/logs"
 
 if ! ssh $REMOTE_USER@$REMOTEHOST "[ -d $MOUNT_POINT ]"
@@ -44,9 +48,6 @@ fi
 EXCLUSIONS="--exclude-from=\"$INSTALLDIR/default-exclusions.txt\""
 [ -f "$INSTALLDIR/exclusions.txt" ] && EXCLUSIONS="${EXCLUSIONS} --exclude-from=\"$INSTALLDIR/exclusions.txt\""
 
-# repeat hourly
-while true
-do
 
 now="$(date +%Y-%m-%d-%H%M%S)"
 
