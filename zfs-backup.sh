@@ -31,7 +31,7 @@ fi
 # repeat hourly
 while true
 do
-  
+
 mkdir -p "$INSTALLDIR/logs"
 
 if ! ssh $REMOTE_USER@$REMOTEHOST "[ -d $MOUNT_POINT ]"
@@ -99,13 +99,15 @@ if [ $return -eq 0 -o $return -eq 24 ]; then
   # Get our list of snaps
   snaps=$(ssh $REMOTE_USER@$REMOTEHOST "zfs list -d 1 -t snapshot -H $RPOOL" | cut -f 1 | cut -d '@' -f 2 | grep -v ^auto-)
 
+  pruned_num=0
+  rSnaps=""
+
   # Reverse the list, sort from newest to oldest
   for tmp in $snaps
   do
      rSnaps="$tmp $rSnaps" # reverse order
   done
 
-  pruned_num=0
   for snap in $rSnaps
   do
      # date format assumed: YYYY-mm-dd-HHMMSS"
