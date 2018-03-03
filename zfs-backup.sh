@@ -37,6 +37,7 @@ mkdir -p "$INSTALLDIR/logs"
 if ! ssh $REMOTE_USER@$REMOTEHOST "[ -d $MOUNT_POINT ]"
   then
   echo "Remote filesystem not mounted"
+  # TODO : retry to connect and check for mount mpoint existence
   exit 1
 fi
 
@@ -175,8 +176,10 @@ if [ $return -eq 0 -o $return -eq 24 ]; then
 
   done
   echo "##### END AUTOPRUNE"
-
+  sleep 3600
+else
+  # sleep 10 seconds if something failed and restart
+  sleep 10
 fi
 
-sleep 3600
 done
