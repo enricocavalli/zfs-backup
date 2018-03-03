@@ -32,7 +32,7 @@ default-exclusions.txt)
 
 # Delegate zfs permission
 
-I use this settins on my `user`:
+I use this settings on my `user`:
 
 	zfs allow user clone,create,destroy,mount,snapshot fs
 	sysctl vfs.usermount=1 # necessary on FreeBSD
