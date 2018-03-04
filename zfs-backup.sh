@@ -28,19 +28,6 @@ fi
 }
 
 
-# repeat hourly
-while true
-do
-
-mkdir -p "$INSTALLDIR/logs"
-
-if ! ssh $REMOTE_USER@$REMOTEHOST "[ -d $MOUNT_POINT ]"
-  then
-  echo "Remote filesystem not mounted"
-  # TODO : retry to connect and check for mount mpoint existence
-  exit 1
-fi
-
 SOURCES="/"
 if [ -f "$INSTALLDIR/sources.txt" ]; then
   SOURCES="--files-from=\"$INSTALLDIR/sources.txt\" -r /"
@@ -49,8 +36,22 @@ fi
 EXCLUSIONS="--exclude-from=\"$INSTALLDIR/default-exclusions.txt\""
 [ -f "$INSTALLDIR/exclusions.txt" ] && EXCLUSIONS="${EXCLUSIONS} --exclude-from=\"$INSTALLDIR/exclusions.txt\""
 
+# repeat hourly or retry sooner if something fails
+while true
+do
+
+mkdir -p "$INSTALLDIR/logs"
+
+global_return=0
+if ! ssh $REMOTE_USER@$REMOTEHOST "[ -d $MOUNT_POINT ]"
+  then
+  echo "Remote filesystem not mounted"
+  global_return=1
+fi
 
 now="$(date +%Y-%m-%d-%H%M%S)"
+
+if [ $global_return -eq 0 ]; then
 
 echo "##### BEGIN RSYNC"
 eval nice -n 20 rsync \
@@ -82,6 +83,7 @@ $SOURCES $REMOTE_USER@$REMOTEHOST:$MOUNT_POINT/
 
 return=$?
 echo "##### END RSYNC"
+
 
 if [ $return -eq 0 -o $return -eq 24 ]; then
 
@@ -177,7 +179,13 @@ if [ $return -eq 0 -o $return -eq 24 ]; then
   done
   echo "##### END AUTOPRUNE"
   sleep 3600
+
 else
+global_return=1
+fi
+fi
+
+if [ ! $global_return -eq 0 ]; then
   # sleep 10 seconds if something failed and restart
   sleep 10
 fi
