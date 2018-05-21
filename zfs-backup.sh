@@ -53,7 +53,6 @@ now="$(date +%Y-%m-%d-%H%M%S)"
 
 if [ $global_return -eq 0 ]; then
 
-echo "##### BEGIN RSYNC"
 eval nice -n 20 rsync \
 -e \"'ssh -i $KEYFILEPATH'\" \
 --log-file=\"$INSTALLDIR/logs/sync.log\" \
@@ -82,20 +81,14 @@ $EXCLUSIONS \
 $SOURCES $REMOTE_USER@$REMOTEHOST:$MOUNT_POINT/
 
 return=$?
-echo "##### END RSYNC"
-
 
 if [ $return -eq 0 -o $return -eq 24 ]; then
 
   if [ ! -z "$PING_URL" ]; then
-    curl -fsS --retry 3 "${PING_URL}"
+    curl -fsS --retry 3 "${PING_URL}" >/dev/null
   fi
 
-
-  echo "##### begin snapshot"
   ssh $REMOTE_USER@$REMOTEHOST "zfs snapshot -r $RPOOL@$now"
-
-  echo "##### BEGIN AUTOPRUNE"
 
   curEpoc=`date +%s`
   lastYear=""; lastMon=""; lastDay=""; lastHour="" lastMin="" ; lastSec=""
@@ -177,7 +170,6 @@ if [ $return -eq 0 -o $return -eq 24 ]; then
      lastMin="$min" ; lastSec="$sec"; lastWeek="$week"
 
   done
-  echo "##### END AUTOPRUNE"
   sleep 3600
 
 else
