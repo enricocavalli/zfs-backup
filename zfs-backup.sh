@@ -67,6 +67,7 @@ eval nice -n 20 rsync \
 --times \
 --devices \
 --specials \
+--verbose \
 --perms \
 --numeric-ids \
 --compress \
