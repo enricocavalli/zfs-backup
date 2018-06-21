@@ -57,6 +57,7 @@ eval nice -n 20 rsync \
 -e \"'ssh -i $KEYFILEPATH'\" \
 --log-file=\"$INSTALLDIR/logs/sync.log\" \
 --fuzzy \
+--sparse \
 --delete \
 --delete-excluded \
 --recursive \
