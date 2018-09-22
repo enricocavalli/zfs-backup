@@ -36,10 +36,6 @@ fi
 EXCLUSIONS="--exclude-from=\"$INSTALLDIR/default-exclusions.txt\""
 [ -f "$INSTALLDIR/exclusions.txt" ] && EXCLUSIONS="${EXCLUSIONS} --exclude-from=\"$INSTALLDIR/exclusions.txt\""
 
-# repeat hourly or retry sooner if something fails
-while true
-do
-
 mkdir -p "$INSTALLDIR/logs"
 
 global_return=0
@@ -169,16 +165,10 @@ if [ $return -eq 0 -o $return -eq 24 ]; then
      lastMin="$min" ; lastSec="$sec"; lastWeek="$week"
 
   done
-  sleep 3600
 
 else
 global_return=1
 fi
 fi
 
-if [ ! $global_return -eq 0 ]; then
-  # sleep 10 seconds if something failed and restart
-  sleep 10
-fi
-
-done
+exit $global_return
