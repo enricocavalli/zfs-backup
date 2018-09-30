@@ -118,11 +118,12 @@ if [ $return -eq 0 -o $return -eq 24 ]; then
      pruned=0
 
      # Looking for snaps older than 12 months
-     #if [ $check -gt 31536000 ]; then
-     #   echo "Destroy $snap"
-     #   ssh $REMOTE_USER@$REMOTEHOST "zfs destroy -r  data@$snap"
-     #   pruned=1
-     #fi
+     if [ $check -gt 31536000 ]; then
+        echo "Destroy $snap"
+        ssh $REMOTE_USER@$REMOTEHOST "zfs destroy -r  data@$snap"
+        pruned=1
+        pruned_num=`expr $pruned_num +  1`
+     fi
 
      # Looking for multiple snaps older than 30 days
      if [ $check -gt 2592000 -a $pruned -eq 0 ]; then
