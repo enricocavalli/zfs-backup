@@ -117,8 +117,8 @@ if [ $return -eq 0 -o $return -eq 24 ]; then
      check=`expr $curEpoc - $snapEpoc`
      pruned=0
 
-     # Looking for snaps older than 12 months
-     if [ $check -gt 31536000 ]; then
+     # Looking for snaps older than 24 months
+     if [ $check -gt 63072000 ]; then
         echo "Destroy $snap"
         ssh $REMOTE_USER@$REMOTEHOST "zfs destroy -r  data@$snap"
         pruned=1
