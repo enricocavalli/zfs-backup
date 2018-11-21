@@ -1,5 +1,6 @@
 *.swp
 config
+config-rsync
 exclusions.txt
 sources.txt
 logs/
