@@ -53,6 +53,7 @@ if [ $return -eq 0 -o $return -eq 24 ]; then
   if [ ! -z "$PING_URL" ]; then
     curl -fsS --retry 3 "${PING_URL}" >/dev/null
   fi
+  return=0
 fi
 
 
