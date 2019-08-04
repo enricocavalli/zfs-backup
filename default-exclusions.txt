@@ -9,6 +9,7 @@
 /private/var/run/*
 /private/var/spool/postfix/*
 /private/var/vm/*
+/private/var/*
 /tmp/*
 /Volumes/*
 */.Trash/
