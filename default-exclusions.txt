@@ -1,3 +1,4 @@
+System/Volumes/Data/
 .Spotlight-*/
 .Trashes
 /afs/*
