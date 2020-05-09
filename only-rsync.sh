@@ -3,7 +3,6 @@
 INSTALLDIR=$( (cd -P $(dirname $0) && pwd) )
 . "$INSTALLDIR/config-rsync"
 
-LIMIT_PRUNE=${LIMIT_PRUNE:-0}
 RPOOL=${MOUNT_POINT#/}
 
 
