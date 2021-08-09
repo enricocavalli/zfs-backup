@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# use dedicated key!
+unset SSH_AUTH_SOCK
+
 INSTALLDIR=$( (cd -P $(dirname $0) && pwd) )
 . "$INSTALLDIR/config-rsync"
 
