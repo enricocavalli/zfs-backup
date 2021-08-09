@@ -3,7 +3,6 @@
 INSTALLDIR=$( (cd -P $(dirname $0) && pwd) )
 . "$INSTALLDIR/config-rsync"
 
-RPOOL=${MOUNT_POINT#/}
 
 
 
